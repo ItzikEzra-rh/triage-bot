@@ -72,6 +72,7 @@ type TriageConfig struct {
 	MissingInfoLabel  string       `mapstructure:"missing_info_label"`
 	NotFixableLabel   string       `mapstructure:"not_fixable_label"`
 	StaleLabel        string       `mapstructure:"stale_label"`
+	StaleDays         int          `mapstructure:"stale_days"`
 	ProgressionLabels []string     `mapstructure:"progression_labels"`
 	TaskTemplatePath  string       `mapstructure:"task_template_path"`
 	TaskTemplate      string       `mapstructure:"task_template"`
@@ -128,6 +129,7 @@ func setDefaults(v *viper.Viper) {
 	v.SetDefault("triage.auto_fix_threshold", 80)
 	v.SetDefault("triage.missing_info_label", "triage-missing-info")
 	v.SetDefault("triage.not_fixable_label", "triage-not-fixable")
+	v.SetDefault("triage.stale_days", 0)
 	v.SetDefault("triage.import.ref", "main")
 	v.SetDefault("source.base_dir", "/var/lib/triage-bot/repos")
 }
@@ -180,6 +182,7 @@ func LoadConfig(configPath string) (*Config, error) {
 	bindEnv("triage.missing_info_label")
 	bindEnv("triage.not_fixable_label")
 	bindEnv("triage.stale_label")
+	bindEnv("triage.stale_days")
 	bindEnv("triage.progression_labels")
 	bindEnv("triage.task_template_path")
 	bindEnv("triage.task_template")
