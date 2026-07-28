@@ -110,6 +110,20 @@ func TestBuildInactiveJQL(t *testing.T) {
 			wantJQL: `project IN ("OSAC") AND issuetype = Bug AND status = New AND updated <= "-14d" ORDER BY key ASC`,
 		},
 		{
+			name: "single project with excluded components",
+			cfg: config.Config{
+				Jira: config.JiraConfig{
+					ProjectKeys:        []string{"OSAC"},
+					ExcludedComponents: []string{"Enclave", "Docs"},
+				},
+				Triage: config.TriageConfig{
+					StaleLabel: "jira-triage-stale",
+					StaleDays:  14,
+				},
+			},
+			wantJQL: `project IN ("OSAC") AND issuetype = Bug AND status = New AND updated <= "-14d" AND component NOT IN ("Enclave", "Docs") ORDER BY key ASC`,
+		},
+		{
 			name: "multiple projects custom days",
 			cfg: config.Config{
 				Jira: config.JiraConfig{
