@@ -18,7 +18,6 @@ import (
 type ScannerJiraClient interface {
 	SearchTickets(ctx context.Context, jql string, maxResults int, nextPageToken string) (*jira.JiraSearchResponse, error)
 	AddLabel(ctx context.Context, key, label string) error
-	RemoveLabel(ctx context.Context, key, label string) error
 }
 
 // IssueProcessor processes a single Jira issue.
@@ -203,8 +202,9 @@ func (s *Scanner) buildInactiveJQL() string {
 	}
 
 	jql := fmt.Sprintf(
-		`project IN (%s) AND issuetype = Bug AND status = New AND updated <= "-%dd"`,
+		`project IN (%s) AND issuetype = Bug AND status = %q AND updated <= "-%dd"`,
 		strings.Join(projects, ", "),
+		s.cfg.Triage.StaleStatus,
 		s.cfg.Triage.StaleDays,
 	)
 
@@ -213,7 +213,7 @@ func (s *Scanner) buildInactiveJQL() string {
 		for i, c := range s.cfg.Jira.ExcludedComponents {
 			comps[i] = fmt.Sprintf("%q", c)
 		}
-		jql += fmt.Sprintf(" AND component NOT IN (%s)", strings.Join(comps, ", "))
+		jql += fmt.Sprintf(" AND (component is EMPTY OR component NOT IN (%s))", strings.Join(comps, ", "))
 	}
 
 	jql += " ORDER BY key ASC"

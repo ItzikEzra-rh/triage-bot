@@ -139,8 +139,8 @@ config:
     stale_label: ""
     # -- Days of inactivity before an open bug is marked stale (0 = disabled)
     stale_days: 0
-    # -- Autofix progression labels (e.g., merged, review, rejected)
-    progression_labels: []
+    # -- Jira status to filter for stale detection (e.g., "New", "Open")
+    stale_status: "New"
     # -- Path to a custom task template file (overrides built-in task.tmpl)
     task_template_path: ""
     # -- Inline task template (overrides task_template_path). Go template

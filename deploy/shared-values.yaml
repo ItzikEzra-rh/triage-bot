@@ -44,7 +44,7 @@ config:
     not_fixable_label: "triage-not-fixable"
     stale_label: ""
     stale_days: 0
-    progression_labels: []
+    stale_status: "New"
     import:
       repo: "https://github.com/flightctl/ai-workflows.git"
       ref: "main"
